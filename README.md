@@ -8,11 +8,13 @@ TempChat is a privacy-focused web chat application that allows two users to comm
 Website: https://tempchat.techservice.ng
 
 ---
-
+## For developers
+![GitHub last commit](https://img.shields.io/github/last-commit/ojiiis/tempchat.techservice.ng)
+![GitHub stars](https://img.shields.io/github/stars/ojiiis/tempchat.techservice.ng)
 ![License](https://img.shields.io/github/license/ojiiis/tempchat.techservice.ng)
-![Stars](https://img.shields.io/github/stars/ojiiis/tempchat.techservice.ng)
-![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)
-![Encryption](https://img.shields.io/badge/E2EE-enabled-blue)
+![E2EE](https://img.shields.io/badge/E2EE-enabled-blue)
+![Privacy](https://img.shields.io/badge/Privacy-focused-success)
+![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red)
 
 ---
 
