@@ -106,14 +106,24 @@ The application should now be running locally.
 ## Project Structure
 
 ```text
-├── public/
-│   ├── css/
-│   ├── js/
-│   └── images/
-├── routes/
-├── server.js
+tempchat.techservice.ng/
+│
+├── index.html          # Landing page
+├── room.html           # Chat room interface, decryption, and encryption
+│
+├── index.js            # Landing page scripts
+├── room.js             # Chat logic
+├── server.mjs          # Node.js server
+│
+├── style.css           # Application styling
+│
+├── public/             # Static assets
+│
 ├── package.json
-└── README.md
+├── package-lock.json
+│
+├── .github/            # GitHub workflows and configuration
+└── .gitignore
 ```
 
 ---
