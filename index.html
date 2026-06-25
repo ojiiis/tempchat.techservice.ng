@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>tempchat | Ephemeral, End-to-End Encrypted Disappearing Chat</title>
+    <meta name="description" content="Secure, private, and entirely temporary. Create accountless, end-to-end encrypted chat rooms that disappear completely the moment you disconnect. No logs, no metadata.">
+    <meta name="keywords" content="ephemeral chat, encrypted messaging, private chat room, secure messaging, zero logs, anonymous chat, no account messaging, web crypto api">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tempchat.techservice.ng/">
+    <meta property="og:title" content="tempchat | Ephemeral, End-to-End Encrypted Disappearing Chat">
+    <meta property="og:description" content="Secure, accountless, browser-encrypted chat rooms that self-destruct when you leave. Zero footprints left behind.">
+    <meta property="og:image" content="https://tempchat.techservice.ng/assets/og-image.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="tempchat | Ephemeral, End-to-End Encrypted Disappearing Chat">
+    <meta property="twitter:description" content="Secure, accountless, browser-encrypted chat rooms that self-destruct when you leave. Zero footprints left behind.">
+    <link rel="canonical" href="https://tempchat.techservice.ng/">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header">
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-icon" aria-hidden="true">⏳</span>
+                <span class="logo-text">(tempchat)</span>
+            </div>
+            <nav class="app-nav" aria-label="Main Navigation">
+                <a href="#features">Features</a>
+                <a href="#security">Security Model</a>
+              </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="container hero-container">
+                <h1 id="hero-title" class="hero-title">
+                    <span class="sr-only">Tempchat: Encrypted Ephemeral Chat Room.</span>
+                    Conversations belong only to the people having them.
+                </h1>
+                <p class="hero-subtitle">An end-to-end encrypted messaging platform where the server never sees your messages, and data vanishes completely when you leave.</p>
+                
+                <div class="action-card">
+                    <div class="action-group create-group">
+                        <h2>Start a New Conversation</h2>
+                        <p>Generate an absolute zero-trace room instantly.</p>
+                        <button id="btn-create-room" class="btn btn-primary">Create Secure Room</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section" aria-labelledby="features-title">
+            <div class="container">
+                <h2 id="features-title" class="section-title">Designed Around Absolute Zero Trust</h2>
+                <div class="features-grid">
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">🔒</div>
+                        <h3>Browser-Side End-to-End Encryption (E2EE)</h3>
+                        <p>Key generation and data encryption happen natively inside your browser via Web Crypto API. Plaintext never leaves your machine.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">👤</div>
+                        <h3>Anonymous Chat (Zero Accounts)</h3>
+                        <p>No phone numbers, no emails, no profiling. Completely decoupled from your real identity.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">💨</div>
+                        <h3>In-Memory Ephemerality (No Logs Saved)</h3>
+                        <p>The backend runs an in-memory relay architecture. When the last participant closes the tab, the room is completely wiped out.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">👁️</div>
+                        <h3>Blind Server Relay Infrastructure</h3>
+                        <p>The infrastructure is strictly an architectural pass-through. Even if compromised, there is nothing stored to intercept or decode.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="security" class="security-section" aria-labelledby="security-title">
+            <div class="container">
+                <h2 id="security-title" class="section-title">The Trust Breakdown</h2>
+                <p class="section-subtitle">Unlike other chat apps, we don't ask you to trust us. Here is what components can actually access.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Entity</th>
+                                <th scope="col">Can Read Content?</th>
+                                <th scope="col">Data Retention Timeline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Sender / Recipient</th>
+                                <td class="status-yes">✅ Yes</td>
+                                <td>Active session memory only</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Relay Server</th>
+                                <td class="status-no">❌ No</td>
+                                <td>Instant transient stream (None)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Database / Admins</th>
+                                <td class="status-no">❌ No</td>
+                                <td>N/A (No storage layers exist)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Network Eavesdropper</th>
+                                <td class="status-no">❌ No</td>
+                                <td>N/A (Encrypted ciphertext payloads)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="app-footer">
+        <div class="container footer-container">
+            <p>&copy; 2026 (tempchat). Open-source under MIT License. Zero data tracked, zero cookies utilized.</p>
+            <div class="footer-links">
+                  <a href="#main-content">Back to top</a>
+            </div>
+        </div>
+    </footer>
+    <script src="index.js"></script>
+</body>
+</html>

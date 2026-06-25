@@ -1,0 +1,35 @@
+name: Live quiz workflow
+
+on:
+    push:
+        branches:
+            - main
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # These must be stored as GitHub Secrets (see Step 3)
+          host: ${{ secrets.SSH_HOST }}
+          username: doksummz
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 21098
+          script: |
+            source /home/doksummz/nodevenv/tempchat.techservice.ng/20/bin/activate && cd /home/doksummz/tempchat.techservice.ng
+            #cd /home/doksummz/tempchat.techservice.ng
+            # Start the agent and add the key to the current shell environment
+            eval $(ssh-agent -s)
+            
+            # IMPORTANT: The private key must not require a passphrase
+            ssh-add ~/.ssh/github 
+
+            git pull origin main
+            npm install
+            npm audit fix
+            #node update.js
+            # Stop the agent after use
+            ssh-agent -k

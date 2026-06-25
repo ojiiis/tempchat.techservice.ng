@@ -1,0 +1,790 @@
+/* ==========================================================================
+   1. CSS VARIABLES & SYSTEM RESET
+   ========================================================================== */
+:root {
+    --bg-main: #0B0F19;
+    --bg-surface: #161D30;
+    --bg-surface-elevated: #222C47;
+    
+    --color-text-primary: #F3F4F6;
+    --color-text-secondary: #9CA3AF;
+    --color-text-muted: #6B7280;
+    
+    --accent-primary: #10B981; /* Secure Emerald Green */
+    --accent-hover: #059669;
+    --accent-danger: #EF4444;
+    
+    --border-color: #2D3748;
+    --max-width: 1100px;
+    --transition-smooth: all 0.2s ease-in-out;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+/* Accessibility: Skip to Content */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 20px;
+    background: var(--accent-primary);
+    color: var(--bg-main);
+    padding: 10px 20px;
+    font-weight: bold;
+    z-index: 999;
+    transition: top 0.2s;
+}
+.skip-link:focus {
+    top: 20px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ==========================================================================
+   2. REUSABLE UTILITIES & LAYOUT
+   ========================================================================== */
+.container {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    width: 100%;
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: var(--bg-main);
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--accent-hover);
+    outline: 2px solid var(--color-text-primary);
+}
+
+.btn-secondary {
+    background-color: var(--bg-surface-elevated);
+    color: var(--color-text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover, .btn-secondary:focus {
+    background-color: var(--border-color);
+    border-color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   3. HEADER / NAVIGATION
+   ========================================================================== */
+.app-header {
+    background-color: rgba(11, 15, 25, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 70px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.logo-icon {
+    font-size: 1.4rem;
+}
+
+.app-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.app-nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+.app-nav a:hover, .app-nav a:focus {
+    color: var(--color-text-primary);
+}
+
+.app-nav .nav-github {
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 6px;
+    background-color: var(--bg-surface);
+}
+
+/* ==========================================================================
+   4. HERO SECTION & ACTION CARD
+   ========================================================================== */
+.hero-section {
+    padding: 80px 0 60px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.15;
+    font-weight: 800;
+    max-width: 800px;
+    margin: 0 auto 24px;
+    letter-spacing: -0.03em;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    color: var(--color-text-secondary);
+    max-width: 650px;
+    margin: 0 auto 48px;
+}
+
+/* Action Dashboard Card */
+.action-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 760px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: left;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.action-group h2 {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+}
+
+.action-group p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.divider span {
+    padding: 0 16px;
+}
+
+.join-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.join-form input {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--color-text-primary);
+    padding: 14px 18px;
+    font-size: 1rem;
+    border-radius: 8px;
+    outline: none;
+    transition: var(--transition-smooth);
+    width: 100%;
+}
+
+.join-form input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* ==========================================================================
+   5. FEATURES MATRIX
+   ========================================================================== */
+.features-section, .security-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 48px;
+    letter-spacing: -0.02em;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.feature-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 32px;
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.feature-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   6. PRIVACY TRUST TABLE
+   ========================================================================== */
+.section-subtitle {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-top: -36px;
+    margin-bottom: 48px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--bg-surface);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+    min-width: 600px;
+}
+
+th, td {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead th {
+    background-color: var(--bg-surface-elevated);
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+tbody th {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+tbody tr:last-child th, tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.status-yes {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.status-no {
+    color: var(--accent-danger);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   7. FOOTER
+   ========================================================================== */
+.app-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 40px 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+.footer-links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.footer-links a:hover {
+    color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   8. MEDIA QUERIES (DESKTOP OPTIMIZATIONS)
+   ========================================================================== */
+@media (min-width: 768px) {
+    .action-card {
+        grid-template-columns: 1fr 50px 1fr;
+        align-items: center;
+    }
+    
+    .divider {
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    .divider::before, .divider::after {
+        border-bottom: none;
+        border-left: 1px solid var(--border-color);
+    }
+    
+    .divider span {
+        padding: 12px 0;
+    }
+    
+    .join-form {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .join-form .btn {
+        width: auto;
+        white-space: nowrap;
+    }
+    
+    .footer-container {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+}
+
+
+
+
+/* ==========================================================================
+   1. CHAT ROOM SYSTEM LAYOUT
+   ========================================================================== */
+.room-body {
+    background-color: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Lock viewport height */
+    overflow: hidden;
+}
+
+.room-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    flex: 1;
+    height: calc(100vh - 70px); /* Subtract Header height */
+    overflow: hidden;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 20px;
+}
+
+@media (min-width: 900px) {
+    .room-layout {
+        grid-template-columns: 320px 1fr; /* Lock sidebar width on desktop */
+    }
+    
+}
+
+/* ==========================================================================
+   2. SIDEBAR PANEL & SESSION STATS
+   ========================================================================== */
+.room-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+@media (max-width: 899px) {
+    .room-sidebar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        max-height: 250px; /* Restrict screen real estate on small windows */
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 16px;
+    }
+    .room-sidebar{
+        display: none;
+    }
+}
+
+.sidebar-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.sidebar-card h3 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+}
+
+.sidebar-meta {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+/* Share Input Controls */
+.share-input-group {
+    display: flex;
+    gap: 6px;
+}
+
+.share-input-group input {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--color-text-secondary);
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    width: 100%;
+    outline: none;
+    font-family: monospace;
+}
+
+.btn-icon {
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    color: var(--color-text-primary);
+    padding: 0 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.btn-icon:hover {
+    background-color: var(--border-color);
+}
+
+/* Fingerprint (SAS) Display */
+.sas-display {
+    background-color: var(--bg-main);
+    border: 1px dashed var(--border-color);
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+}
+
+.sas-placeholder {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    letter-spacing: normal;
+}
+
+/* Presence Roster */
+.peer-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.peer-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-text-muted);
+}
+.status-indicator.online {
+    background-color: var(--accent-primary);
+}
+
+.peer-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   3. CHAT VIEWPORT & MESSAGES STREAM
+   ========================================================================== */
+.chat-panel {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Global Dynamic State Badges */
+.badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.badge-secure {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--accent-primary);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Security Notification Banners */
+.security-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 20px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.banner-warning {
+    background-color: rgba(239, 68, 68, 0.08);
+    color: #FCA5A5;
+}
+.banner-verified {
+    background-color: rgba(16, 185, 129, 0.08);
+    color: #A7F3D0;
+}
+
+/* Scrollable Message Box */
+.message-viewport {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* System Message Styles */
+.system-message {
+    align-self: center;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+/* Chat Message Bubbles */
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+}
+
+.message-incoming {
+    align-self: flex-start;
+}
+
+.message-outgoing {
+    align-self: flex-end;
+}
+
+.msg-meta {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+    padding: 0 4px;
+}
+.message-outgoing .msg-meta {
+    align-self: flex-end;
+}
+
+.msg-bubble {
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.message-incoming .msg-bubble {
+    background-color: var(--bg-surface-elevated);
+    color: var(--color-text-primary);
+    border-bottom-left-radius: 4px;
+}
+
+.message-outgoing .msg-bubble {
+    background-color: var(--accent-primary);
+    color: var(--bg-main);
+    font-weight: 500;
+    border-bottom-right-radius: 4px;
+}
+
+/* ==========================================================================
+   4. COMPOSER COMPONENT (INPUT CONTROL AREA)
+   ========================================================================== */
+.chat-input-area {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+}
+
+.message-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 12px;
+}
+.message-form:focus-within {
+    border-color: var(--accent-primary);
+}
+
+.input-wrapper {
+    flex: 1;
+}
+
+.message-form textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    padding: 8px 4px;
+    resize: none;
+    max-height: 120px;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.btn-send {
+    background-color: var(--accent-primary);
+    color: var(--bg-main);
+    border: none;
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    flex-shrink: 0;
+}
+.btn-send:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+.btn-send:disabled {
+    background-color: var(--bg-surface-elevated);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.input-meta-hint {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Header Override for App Disconnect Actions */
+.btn-disconnect {
+    background-color: transparent;
+    border: 1px solid var(--accent-danger);
+    color: var(--accent-danger);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.btn-disconnect:hover {
+    background-color: var(--accent-danger);
+    color: var(--color-text-primary);
+}

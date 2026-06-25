@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Room | tempchat</title>
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="room-body">
+
+    <header class="app-header">
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-icon" aria-hidden="true">⏳</span>
+                <span class="logo-text">(tempchat)</span>
+                <span class="badge badge-secure" id="room-status-badge">Initialising E2EE...</span>
+            </div>
+            <div class="header-actions">
+                <button id="btn-leave-room" class="btn-disconnect" aria-label="Leave and destroy session data">
+                    Disconnect & Wipe
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="room-layout container">
+        
+        <aside class="room-sidebar" aria-label="Room Session Details">
+            
+            <div class="sidebar-card share-card">
+                <h3>Invite Participant</h3>
+                <p class="sidebar-meta">Share this link to allow secure, encrypted access. Expired once closed.</p>
+                <div class="share-input-group">
+                    <input type="text" id="input-share-url" readonly value="https://tempchat.example.com/room/loading..." aria-label="Room Share URL">
+                    <button id="btn-copy-link" class="btn-icon" title="Copy Link" aria-label="Copy link to clipboard">📋</button>
+                </div>
+            </div>
+
+            <!-- <div class="sidebar-card crypto-card">
+                <h3>Fingerprint Authenication</h3>
+                <p class="sidebar-meta">Compare this Short Authentication String (SAS) out-of-band to verify no Man-in-the-Middle is present.</p>
+                <div class="sas-display" id="sas-container">
+                    <span class="sas-placeholder">Awaiting exchange...</span>
+                </div>
+            </div> -->
+
+            <!-- <div class="sidebar-card roster-card">
+                <h3>Connected Peers (<span id="peer-count">1</span>)</h3>
+                <ul class="peer-list" id="peer-list" role="log" aria-label="Active participants">
+                    <li class="peer-item self-item">
+                        <span class="status-indicator online" aria-hidden="true"></span>
+                        <span class="peer-name">You (Generating Identity)</span>
+                    </li>
+                </ul>
+            </div> -->
+        </aside>
+
+        <main class="chat-panel" aria-label="Conversation Interface">
+            
+            <div class="security-banner banner-warning" id="security-banner" role="status">
+                <span class="banner-icon" aria-hidden="true">⚠️</span>
+                <p id="security-banner-text">Generating ephemeral cryptographic keypairs inside your browser sandbox and waiting for a member to join...</p>
+            </div>
+
+            <section class="message-viewport" id="message-viewport" aria-label="Message History" role="log" aria-live="polite">
+                <!-- <div class="system-message">
+                    <p>Secure system channel created. Awaiting peer connection...</p>
+                </div> -->
+                
+            </section>
+
+            <footer class="chat-input-area">
+                <form id="form-message-input" class="message-form" autocomplete="off" novalidate>
+                    <div class="input-wrapper">
+                        <label for="input-message-text" class="visually-hidden">Type an encrypted message...</label>
+                        <textarea 
+                            id="input-message-text" 
+                            placeholder="Type an end-to-end encrypted message..." 
+                            required 
+                            disabled
+                            rows="1"
+                            maxlength="2000"
+                        ></textarea>
+                    </div>
+                    <button type="submit" id="btn-send-message" class="btn-send" disabled aria-label="Send Encrypted Message">
+                        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="input-meta-hint">
+                    Your message is encrypted via <strong>AES-GCM-256</strong> before leaving your machine.
+                </div>
+            </footer>
+
+        </main>
+    </div>
+<script src="room.js"></script>
+<script>
+    var RSA = false,AES = false;
+        document.getElementById('form-message-input').addEventListener('submit', async(e) => {
+        e.preventDefault();
+        const rawText = document.getElementById('input-message-text').value.trim();
+        if (!rawText) return;
+        let data = window.location.href.split("room/");
+        let [room_id,user_id] = data[data.length - 1].split("/");
+        let dispatchedQry = await fetch("/post",{method:"POST",headers:{
+            "Content-Type":"application/json"
+        },body:JSON.stringify({
+         room_id,user_id,message:await encryptMessage(rawText,AES)
+        })});
+        let dispatched = await dispatchedQry.json();
+        document.getElementById('input-message-text').value = '';
+        document.getElementById('input-message-text').style.height = 'auto';
+    });
+    async function encryptMessage(message, aesKey) {
+    const iv = crypto.getRandomValues(
+        new Uint8Array(12)
+    );
+
+    const encoded =
+        new TextEncoder().encode(message);
+
+    const encrypted =
+        await crypto.subtle.encrypt(
+            {
+                name: "AES-GCM",
+                iv
+            },
+            aesKey,
+            encoded
+        );
+
+    return `${arrayBufferToBase64(iv)}--${arrayBufferToBase64(encrypted)}`;
+}
+async function decryptMessage(iv_cipher,aesKey) {
+    const [iv,cipher] = iv_cipher.split("--");
+    const decrypted =
+        await crypto.subtle.decrypt(
+            {
+                name: "AES-GCM",
+                iv: new Uint8Array(
+                    base64ToArrayBuffer(iv)
+                )
+            },
+            aesKey,
+            base64ToArrayBuffer(cipher)
+        );
+
+    return new TextDecoder().decode(
+        decrypted
+    );
+}
+
+        function appendSystemMessage(text) {
+        const sysDiv = document.createElement('div');
+        sysDiv.className = 'system-message';
+        sysDiv.innerHTML = `<p>${text}</p>`;
+        document.getElementById('message-viewport').appendChild(sysDiv);
+         document.getElementById('message-viewport').scrollTop = document.getElementById('message-viewport').scrollHeight;
+    }
+        function appendChatMessage(senderName, content, isOutgoing = false) {
+        const msgTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const msgArticle = document.createElement('article');
+        msgArticle.className = `chat-message ${isOutgoing ? 'message-outgoing' : 'message-incoming'}`;
+        
+        msgArticle.innerHTML = `
+            <span class="msg-meta">${senderName} • ${msgTime}</span>
+            <div class="msg-bubble">
+                <p>${content}</p>
+            </div>
+        `;
+        
+        document.getElementById('message-viewport').appendChild(msgArticle);
+        document.getElementById('message-viewport').scrollTop = document.getElementById('message-viewport').scrollHeight;
+    }
+    let se = new EventSource("/room-event/$room_id/$user_id");
+     se.onerror = function(e){
+       console.log(e.message);
+     }
+             se.onmessage = async function(e){
+                let data = JSON.parse(e.data);
+                let dir = ("$user_id"==data.user_id)?true:false;
+            if(data.type == "message"){
+                let DD = await decryptMessage(data.data,AES);
+                appendChatMessage(data.user_id, DD, dir);
+            }
+            if(data.type == "status"){
+                //appendSystemMessage(data.data);
+                if(data.data == "member_left"){
+             document.getElementById('input-message-text').disabled = true;
+             document.getElementById('btn-send-message').disabled = true;
+             appendSystemMessage("Member left chat.");
+                }else if(data.data == "member_joined"){
+             appendSystemMessage("Member joined chat.");
+                }
+            }
+             if(data.type == "end_handshake"){
+                 (async ()=>{
+                    const decryptedAES =
+                    await crypto.subtle.decrypt(
+                        {
+                            name: "RSA-OAEP"
+                        },
+                        RSA.privateKey,
+                        base64ToArrayBuffer(
+                            data.data
+                        )
+                    );
+    
+               AES = await crypto.subtle.importKey(
+                    "raw",
+                    decryptedAES,
+                    {
+                        name: "AES-GCM"
+                    },
+                    true,
+                    ["encrypt", "decrypt"]
+                );
+             initializeCryptoHandshakeComplete();
+                 })()
+            }
+           
+             };
+
+   
+function arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+
+    let binary = "";
+
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+
+    return btoa(binary);
+}
+function base64ToArrayBuffer(base64) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+
+    return bytes.buffer;
+}
+
+ (async ()=>{
+       const rsaKeys =
+    await crypto.subtle.generateKey(
+        {
+            name: "RSA-OAEP",
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([1,0,1]),
+            hash: "SHA-256"
+        },
+        false,
+        ["encrypt", "decrypt"]
+    );
+    RSA = rsaKeys;
+    const exported = await crypto.subtle.exportKey(
+    "spki",
+    rsaKeys.publicKey
+);
+let req = await fetch("/pub_key",{method:"POST",headers:{
+            "Content-Type":"application/json"
+        },body:JSON.stringify({
+         room_id:"$room_id",user_id:"$user_id",pub_key:arrayBufferToBase64(exported)
+        })});
+
+let res = await req.json();
+
+if(res.handshake == true){
+   
+  const aesKey = await crypto.subtle.generateKey(
+    {
+        name: "AES-GCM",
+        length: 256
+    },
+    true,
+    ["encrypt", "decrypt"]
+);
+  AES = aesKey;
+const rawAES = await crypto.subtle.exportKey(
+    "raw",
+    aesKey
+);
+
+const bobPublicKey = await crypto.subtle.importKey(
+        "spki",
+        base64ToArrayBuffer(res.pubkey),
+        {
+            name: "RSA-OAEP",
+            hash: "SHA-256"
+        },
+        true,
+        ["encrypt"]
+    );
+
+    const encryptedAES =
+    await crypto.subtle.encrypt(
+        {
+            name: "RSA-OAEP"
+        },
+        bobPublicKey,
+        rawAES
+    );
+const encryptedAESString = arrayBufferToBase64(encryptedAES);
+  req = await fetch("/end_handshake",{method:"POST",headers:{
+            "Content-Type":"application/json"
+        },body:JSON.stringify({
+         room_id:"$room_id",user_id:"$user_id",aes_key:encryptedAESString
+        })});
+    res = await req.json();
+    initializeCryptoHandshakeComplete();
+}
+
+ })();
+
+
+
+
+    function initializeCryptoHandshakeComplete() {
+        console.log("Handshake complete! Unlocking input systems.");
+        
+        document.getElementById('room-status-badge').className = "badge badge-secure";
+        document.getElementById('room-status-badge').textContent = "E2EE Active";
+
+        document.getElementById('security-banner').className = "security-banner banner-verified";
+        document.getElementById('security-banner').innerHTML = `<strong>Channel Secured:</strong> Local ECDH key exchange validated. Messages are fully encrypted.`;
+        
+        // --- THIS CORES UNLOCKS YOUR UI ---
+        document.getElementById('input-message-text').disabled = false;
+        document.getElementById('btn-send-message').disabled = false;
+        document.getElementById('input-message-text').focus();
+
+        //document.getElementById('sas-container').innerHTML = `<span>ALPHA-99-ECHO</span>`;
+        //appendSystemMessage("Secure end-to-end encryption handshake verified successfully.");
+    }
+</script>
+</body>
+</html>
