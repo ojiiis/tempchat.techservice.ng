@@ -14,7 +14,9 @@ const random = (len = 10)=>{
   }
   return result;
 }
-
+app.get("/google520cb1f3d523e453.html",(req, res)=>{
+   res.end("google-site-verification: google520cb1f3d523e453.html");
+});
 app.get("/", (req, res) => {
     res.end(ojs.get("index.html"));
 });
