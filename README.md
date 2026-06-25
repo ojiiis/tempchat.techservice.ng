@@ -4,7 +4,15 @@ Temporary end-to-end encrypted browser chat.
 
 TempChat is a privacy-focused web chat application that allows two users to communicate securely without creating accounts, installing apps, or storing messages permanently.
 
+## Live Demo
 Website: https://tempchat.techservice.ng
+
+---
+
+![License](https://img.shields.io/github/license/ojiiis/tempchat.techservice.ng)
+![Stars](https://img.shields.io/github/stars/ojiiis/tempchat.techservice.ng)
+![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)
+![Encryption](https://img.shields.io/badge/E2EE-enabled-blue)
 
 ---
 
