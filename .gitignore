@@ -1,2 +1,5 @@
 node_modules
 index copy.html
+tmp
+.htaccess
+stderr.log
