@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const defaultText = btnCreateRoom.textContent;
         setButtonLoading(btnCreateRoom, true, defaultText);
         const secureId = generateSecureRoomId();
-        const userId = random(2);
+        const userId = random(4);
         setTimeout(() => {
             window.location.href = `room/${secureId}/user-${userId}`; // Fallback parsing context for local file testing
         }, 600);
