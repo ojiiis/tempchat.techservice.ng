@@ -63,21 +63,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 600);
     });
 
-    formJoinRoom.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const submitBtn = formJoinRoom.querySelector('button[type="submit"]');
-        const defaultText = submitBtn.textContent;
-        const cleanRoomId = parseRoomId(inputRoomId.value);
-
-        if (!cleanRoomId) {
-            inputRoomId.classList.add('input-error');
-            inputRoomId.focus();
-            return;
-        }
-
-        setButtonLoading(submitBtn, true, defaultText);
-        setTimeout(() => {
-            window.location.href = `room.html?id=${cleanRoomId}`;
-        }, 400);
-    });
 });

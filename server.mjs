@@ -2,8 +2,14 @@ import express from "express";
 import {ojs} from "ojs-loader"
 const port = 3031;
 const app = express();
-const rooms = new Map(); //key=>[participant1,participant2]
-
+const rooms = new Map();
+app.use(express.json());
+app.use(express.static("public"));
+app.use((req,res,next)=>{
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+ next();
+});
 //client side
 const random = (len = 10)=>{
  if(len == 0)return '';
@@ -30,7 +36,7 @@ app.get("/room/:room_id", (req, res) => {
 app.get("/room/:room_id/:user_id", (req, res) => {
     const {room_id,user_id} = req.params;
     if(user_id == undefined){
-        user_id = random(2);
+        user_id = random(4);
     }
 
     res.end(ojs.get("room.html",{room_id,user_id}));
@@ -40,36 +46,35 @@ app.get("/room/:room_id/:user_id", (req, res) => {
 //server side
 function partner_pubkey(room_id,user_id){
     let users = rooms.get(room_id);
+    if(typeof users == "object"){
     for(const user of users){
       if(user.user != user_id){
          return user.pub_key;
       }
     }
+}
     return '';
 }
 
 function partner(room_id,user_id){
     let users = rooms.get(room_id);
-    for(const user of users){
+   if(typeof users == "object"){
+     for(const user of users){
       if(user.user != user_id){
          return user;
       }
     }
+   }
     return false;
 }
-app.use(express.json());
-app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
- next();
-});
+
 
 app.post("/end_handshake", (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "application/json");
-    //res.setHeader("Access-Control-Allow-Headers", "Chat-Name");
       let { room_id, user_id,aes_key } = req.body;
       let partnerClient = partner(room_id,user_id);
+      
       partnerClient.client.write(`data: {"type":"end_handshake","data":"${aes_key}"}\n\n`);
        res.json({ status: 1 ,message:"handshake_completed."});
 });
@@ -77,12 +82,10 @@ app.post("/end_handshake", (req, res) => {
 app.post("/pub_key", (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "application/json");
-    //res.setHeader("Access-Control-Allow-Headers", "Chat-Name");
-
     let { room_id, user_id,pub_key } = req.body;
     
     let users = rooms.get(room_id);
-    //rooms.set(room_id, [{user,"client":res}]);
+    
     let newRoom = [];
     for (const user of users) {
        if(user.user == user_id){
@@ -140,19 +143,12 @@ app.get("/room-event/:room_id/:user", (req, res) => {
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
     let { room_id, user } = req.params;
-   //  console.log(room_id," ",user);
-
-
+  
     if (!rooms.has(room_id)) {
         rooms.set(room_id, [{user,"client":res}]);
     }
     let users = rooms.get(room_id);
-
-    // console.log(users);
-    //chat size logic
-    if(users.length < 2 && !users.some(u => u.user === user)){
-        /*{user,"client":res}*/
-      
+    if(users.length < 2 && !users.some(u => u.user === user)){ 
        let newUser = [...users, {user,"client":res}];
         rooms.set(room_id, newUser);
     }
@@ -163,7 +159,7 @@ app.get("/room-event/:room_id/:user", (req, res) => {
     req.on("close",()=>{
     
     let users = rooms.get(room_id);
-    //console.log(users);
+   
     users = users.filter(
         u => u.user !== user
     );
@@ -177,7 +173,7 @@ app.get("/room-event/:room_id/:user", (req, res) => {
         users[0].client.write(`data: {"type":"status","data":"member_left"}\n\n`);
         
     }
-    //console.log(rooms);
+    
     });
 });
 
