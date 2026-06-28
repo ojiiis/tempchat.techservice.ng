@@ -35,21 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollToBottom();
     }
 
-    function appendChatMessage(senderName, content, isOutgoing = false) {
-        const msgTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const msgArticle = document.createElement('article');
-        msgArticle.className = `chat-message ${isOutgoing ? 'message-outgoing' : 'message-incoming'}`;
-        
-        msgArticle.innerHTML = `
-            <span class="msg-meta">${senderName} • ${msgTime}</span>
-            <div class="msg-bubble">
-                <p>${escapeHTML(content)}</p>
-            </div>
-        `;
-        
-        messageViewport.appendChild(msgArticle);
-        scrollToBottom();
-    }
+
 
     function scrollToBottom() {
         messageViewport.scrollTop = messageViewport.scrollHeight;
@@ -154,7 +140,7 @@ async function decryptMessage(iv_cipher,aesKey) {
         msgArticle.innerHTML = `
             <span class="msg-meta">${senderName} • ${msgTime}</span>
             <div class="msg-bubble">
-                <p>${content}</p>
+                <p>${escapeHTML(content)}</p>
             </div>
         `;
         
@@ -173,7 +159,7 @@ async function decryptMessage(iv_cipher,aesKey) {
             if(data.type == "message"){
                 let DD = await decryptMessage(data.data,AES);
                 appendChatMessage(data.user_id, DD, dir);
-                if(user_id != data.user_id){
+                if(user_id != data.user_id && document.hidden){
                     msgSound2.play();
                 }
             }

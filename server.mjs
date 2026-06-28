@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 
 app.get("/room/:room_id", (req, res) => {
     const {room_id} = req.params;
-     let user_id = random(2);
+     let user_id = random(4);
      res.redirect(`/room/${room_id}/user-${user_id}`);
      
 });
